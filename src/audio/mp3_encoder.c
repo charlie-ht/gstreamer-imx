@@ -37,7 +37,6 @@ enum
 #define DEFAULT_BITRATE (128)
 #define DEFAULT_HIGH_QUALITY_MODE (TRUE)
 
-
 #define ALIGN_TO(VALUE, ALIGN_SIZE)  ( ((guintptr)(((guint8*)(VALUE)) + (ALIGN_SIZE) - 1) / (ALIGN_SIZE)) * (ALIGN_SIZE) )
 
 /* for the FSL MP3 encoder, the bits per frame count is fixed (16-bit stereo -> 2*2 byte -> 4 byte) */
@@ -275,6 +274,12 @@ static gboolean gst_imx_audio_mp3_enc_start(GstAudioEncoder *audioencoder)
 		if (ptr == NULL)
 		{
 			GST_ERROR_OBJECT(audioencoder, "allocating memory block failed");
+			return FALSE;
+		}
+
+		if(alloc_info->align == 0)
+		{
+			GST_ERROR_OBJECT(audioencoder, "invariant error");
 			return FALSE;
 		}
 
